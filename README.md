@@ -1,13 +1,17 @@
 # Windcentrale
-**Beta!**
+**Beta!!!**
 ## Why?
-The standard 'Winddelen' device only displays the current power of the windmill. This device gives you more detailed information about the production off the windmill, like current power, energy produced this year, windspeed, roation speed, etc.
+The standard 'Winddelen' device only displays the current power of the windmill. This device gives you more detailed information about the production off the windmill, like current power, energy produced this year, windspeed, roation speed, etc. 
 ## Parameters
+Parameters are the same as for the Winddelen device:
+
 | Parameter | Description |
 | :--- | :--- |
 | **Select a mill** | eg. De Grote Geert, etc |
 | **Number of winddelen** | The number of 'winddelen' you own |
 ## Devices
+The following 9 units are created:
+
 | Name | Description |
 | :--- | :--- |
 | **Power (you)** | The power the windmill is producing according to your 'winddelen' |
@@ -20,6 +24,6 @@ The standard 'Winddelen' device only displays the current power of the windmill.
 | **Operational time** | The percentage of up-time of the windmill, since the beginning |
 | **Hours** | Hours up-time this year |
 ## To do
-- [ ] Add polling time
+- [ ] Add polling time (now every minute)
 - [ ] Add 'Wind direction'. Didn't found a way to display this. The standard 'Wind' device, also display the wind speed in m/s. But we get only the wind speed in bft from windcentrale :(
 - [ ] Add possibility to see the results from multiple windmills?
