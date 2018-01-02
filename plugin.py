@@ -37,7 +37,7 @@ import json
 
 class BasePlugin:
 
-    __HEARTBEATS = 6               # 5 minutes
+    __HEARTBEATS2MIN = 6               # 5 minutes
     __WINDMILLS = {
         # Name                 ID  winddelen
         "De Grote Geert":   [   1,  9910],
@@ -86,9 +86,7 @@ class BasePlugin:
         if "xfr_windcentrale" not in Images:
             Domoticz.Image("xfr_windcentrale.zip").Create()
         image = Images["xfr_windcentrale"].ID
-        Domoticz.Log("Image created. ID: "+str(image))
-
-        image = 7
+        Domoticz.Debug("Image created. ID: "+str(image))
         # Validation of parameters
         # Check the selected Windmill
         Domoticz.Debug("Adress: "+Parameters["Address"])
@@ -229,7 +227,7 @@ class BasePlugin:
                 Domoticz.Debug("onHeartbeat called, Connection is alive.")
             else:
                 self.__httpcon.Connect()
-            self.__runAgain = self.__HEARTBEATS
+            self.__runAgain = 1 * self.__HEARTBEATS2MIN  # 1 minute
         else:
             Domoticz.Debug("onHeartbeat called, run again in "+str(self.__runAgain)+" heartbeats.")
 
@@ -284,7 +282,7 @@ def DumpConfigToLog():
         Domoticz.Debug("Device sValue:   '" + Devices[x].sValue + "'")
         Domoticz.Debug("Device LastLevel: " + str(Devices[x].LastLevel))
     for x in Settings:
-        Domoticz.Debug("Setting:          " + str(x) + " - " + str(Settings[x]))
+        Domoticz.Debug("Setting:           " + str(x) + " - " + str(Settings[x]))
 
 def UpdateDevice(Unit, nValue, sValue, TimedOut=0, AlwaysUpdate=False):
     # Make sure that the Domoticz device still exists (they can be deleted) before updating it
