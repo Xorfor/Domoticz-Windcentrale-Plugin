@@ -13,8 +13,8 @@ The standard 'Winddelen' device only displays the current power of the windmill.
 | **Power (you)** | The power the windmill is producing according to your 'winddelen' |
 | **Power (total)** | The power the windmill currently producing in total |
 | **Relative** | The relative power of the windmill against the maximum power |
-| **Energy (you)** | The total energy the this windmill has produce this year for you 'winddelen' |
-| **Energy (total)** | The total energy the windmill has produce this year |
+| **Energy (you)** | The total energy the this windmill has produced this year for you 'winddelen' |
+| **Energy (total)** | The total energy the windmill has produced this year |
 | **Windspeed** | The current windspeed on the location of the windmill |
 | **RPM** | Rotation speed of the windmill |
 | **Operational time** | The percentage of up-time of the windmill, since the beginning |
