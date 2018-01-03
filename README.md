@@ -8,18 +8,19 @@ Parameters are the same as for the Winddelen device:
 | Parameter | Description |
 | :--- | :--- |
 | **Select a mill** | eg. De Grote Geert, etc |
-| **Number of winddelen** | The number of 'winddelen' you own |
+| **Number of winddelen** | The number of wind shares ("Winddelen") you own |
 ## Devices
 The following 9 units are created:
 
 | Name | Description |
 | :--- | :--- |
-| **Power (you)** | The power the windmill is producing according to your 'winddelen' |
+| **Power (you)** | The current power provided for your wind shares |
 | **Power (total)** | The power the windmill currently producing in total |
 | **Relative** | The relative power of the windmill against the maximum power |
 | **Energy (you)** | The total energy the this windmill has produced this year for you 'winddelen' |
 | **Energy (total)** | The total energy the windmill has produced this year |
-| **Windspeed** | The current windspeed on the location of the windmill |
+| **Windspeed** | Measured current windspeed on the location of the windmill |
+| **Winddirection** | Current wind direction |
 | **RPM** | Rotation speed of the windmill |
 | **Operational time** | The percentage of up-time of the windmill, since the beginning |
 | **Hours** | Hours up-time this year |
