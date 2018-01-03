@@ -20,7 +20,7 @@ The following 9 units are created:
 | **Energy (you)** | The total energy this windmill has produced this year for your wind shares |
 | **Energy (total)** | The total energy the windmill has produced this year |
 | **Windspeed** | Measured current windspeed on the location of the windmill |
-| **Winddirection** | Current wind direction |
+| ~~**Winddirection**~~ | ~~Current wind direction~~ |
 | **RPM** | Rotation speed of the windmill |
 | **Operational time** | The percentage of up-time of the windmill, since the beginning |
 | **Hours** | Hours up-time this year |
