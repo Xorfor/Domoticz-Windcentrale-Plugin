@@ -17,7 +17,7 @@ The following 9 units are created:
 | **Power (you)** | The current power provided for your wind shares |
 | **Power (total)** | The power the windmill currently producing in total |
 | **Relative** | The relative power of the windmill against the maximum power |
-| **Energy (you)** | The total energy the this windmill has produced this year for you 'winddelen' |
+| **Energy (you)** | The total energy this windmill has produced this year for your wind shares |
 | **Energy (total)** | The total energy the windmill has produced this year |
 | **Windspeed** | Measured current windspeed on the location of the windmill |
 | **Winddirection** | Current wind direction |
