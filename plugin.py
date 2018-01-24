@@ -22,7 +22,7 @@
                 <option label="De Witte Juffer" value="De Witte Juffer"/>
             </options>
         </param>
-        <param field="Port" label="Number of winddelen" width="30px" required="true"/>
+        <param field="Mode1" label="Number of winddelen" width="30px" required="true"/>
         <param field="Mode6" label="Debug" width="75px">
             <options>
                 <option label="True" value="Debug"/>
@@ -39,17 +39,17 @@ class BasePlugin:
 
     __HEARTBEATS2MIN = 6               # 5 minutes
     __WINDMILLS = {
-        # Name                 ID  winddelen
-        "De Grote Geert":   [   1,  9910],
-        "De Jonge Held":    [   2, 10154],
-        "Het Rode Hert":    [  31,  6648],
-        "De Ranke Zwaan":   [  41,  6164],
-        "De Witte Juffer":  [  51,  5721],
-        "De Bonte Hen":     [ 111,  5579],
-        "De Trouwe Wachter":[ 121,  5602],
-        "De Blauwe Reiger": [ 131,  5534],
-        "De Vier Winden":   [ 141,  5512],
-        "De Boerenzwaluw":  [ 191,  3000]
+        # Name                 ID  winddelen max
+        "De Grote Geert":   [   1,      9910,  0 ],
+        "De Jonge Held":    [   2,     10154,  0 ],
+        "Het Rode Hert":    [  31,      6648,  0 ],
+        "De Ranke Zwaan":   [  41,      6164,  0 ],
+        "De Witte Juffer":  [  51,      5721,  0 ],
+        "De Bonte Hen":     [ 111,      5579,  0 ],
+        "De Trouwe Wachter":[ 121,      5602,  0 ],
+        "De Blauwe Reiger": [ 131,      5534,  0 ],
+        "De Vier Winden":   [ 141,      5512,  0 ],
+        "De Boerenzwaluw":  [ 191,      3000,  0 ]
     }
 
     __API_ADDRESS = "zep-api.windcentrale.nl"
@@ -99,9 +99,9 @@ class BasePlugin:
             self.__id = -1
             self.__max_winddelen = -1
         # Check the number of winddelen
-        Domoticz.Debug("Port: "+Parameters["Port"])
+        Domoticz.Debug("Mode1: "+Parameters["Mode1"])
         try:
-            self.__number_winddelen = int(Parameters["Port"])
+            self.__number_winddelen = int(Parameters["Mode1"])
             if self.__number_winddelen < 0 or self.__number_winddelen > self.__max_winddelen:
                 self.__number_winddelen = -1
         except:
@@ -113,16 +113,16 @@ class BasePlugin:
         Domoticz.Debug("number winddelen: "+str(self.__number_winddelen))
         # Create devices
         if len(Devices) == 0:
-            Domoticz.Device(Unit=self.__UNIT_POWERWND, Name="Power (you)", TypeName="Custom", Options={"Custom": "1;Watt"}, Image=image, Used=1).Create()
-            Domoticz.Device(Unit=self.__UNIT_POWERTOT, Name="Power (total)", TypeName="Custom", Options={"Custom": "1;kW"}, Image=image, Used=1).Create()
-            Domoticz.Device(Unit=self.__UNIT_POWERREL, Name="Relative", TypeName="Custom", Options={"Custom": "1;%"}, Image=image, Used=1).Create()
-            Domoticz.Device(Unit=self.__UNIT_WINDSPEED, Name="Wind speed", TypeName="Custom", Options={"Custom": "0.0;bft"}, Image=image, Used=1).Create()
-            #Domoticz.Device(Unit=self.__UNIT_WINDDIRECTION, Name="Wind direction", TypeName="Wind", Image=7, Used=1).Create()
-            Domoticz.Device(Unit=self.__UNIT_RPM, Name="RPM", TypeName="Custom", Options={"Custom": "1;rpm"}, Image=image, Used=1).Create()
-            Domoticz.Device(Unit=self.__UNIT_OPERATIONAL, Name="Operational time", TypeName="Custom", Options={"Custom": "1;%"}, Image=image, Used=1).Create()
-            Domoticz.Device(Unit=self.__UNIT_KWHTOT, Name="Energy (total)", TypeName="Custom", Options={"Custom": "1;MWh"}, Image=image, Used=1).Create()
-            Domoticz.Device(Unit=self.__UNIT_KWHWND, Name="Energy (you)", TypeName="Custom", Options={"Custom": "1;kWh"}, Image=image, Used=1).Create()
-            Domoticz.Device(Unit=self.__UNIT_HOURSYEAR, Name="Hours", TypeName="Custom", Image=image, Used=1).Create()
+            Domoticz.Device( Unit=self.__UNIT_POWERWND, Name="Power (" + str( self.__number_winddelen ) + ")", TypeName="Custom", Options={"Custom": "1;Watt"}, Image=image, Used=1).Create()
+            Domoticz.Device( Unit=self.__UNIT_POWERTOT, Name="Power (total)", TypeName="Custom", Options={"Custom": "1;kW"}, Image=image, Used=1).Create()
+            Domoticz.Device( Unit=self.__UNIT_POWERREL, Name="Relative", TypeName="Custom", Options={"Custom": "1;%"}, Image=image, Used=1).Create()
+            Domoticz.Device( Unit=self.__UNIT_WINDSPEED, Name="Wind speed", TypeName="Custom", Options={"Custom": "0.0;bft"}, Image=image, Used=1).Create()
+            #Domoticz.Device( Unit=self.__UNIT_WINDDIRECTION, Name="Wind direction", TypeName="Wind", Image=7, Used=1).Create()
+            Domoticz.Device( Unit=self.__UNIT_RPM, Name="RPM", TypeName="Custom", Options={"Custom": "1;rpm"}, Image=image, Used=1).Create()
+            Domoticz.Device( Unit=self.__UNIT_OPERATIONAL, Name="Operational time", TypeName="Custom", Options={"Custom": "1;%"}, Image=image, Used=1).Create()
+            Domoticz.Device( Unit=self.__UNIT_KWHWND, Name="Energy (" + str( self.__number_winddelen ) + ")", TypeName="Custom", Options={"Custom": "1;kWh"}, Image=image, Used=1).Create()
+            Domoticz.Device( Unit=self.__UNIT_KWHTOT, Name="Energy (total)", TypeName="Custom", Options={"Custom": "1;MWh"}, Image=image, Used=1).Create()
+            Domoticz.Device( Unit=self.__UNIT_HOURSYEAR, Name="Hours", TypeName="Custom", Image=image, Used=1).Create()
 
         DumpConfigToLog()
         Domoticz.Debug("self.__API_ADDRESS: "+self.__API_ADDRESS)
@@ -155,17 +155,17 @@ class BasePlugin:
         Domoticz.Debug("onMessage called")
         DumpHTTPResponseToLog(Data)
         jsonData = json.loads(Data["Data"].decode("utf-8", "ignore"))
-        # Power produced fot the amount of winddelen
+        # Power produced for the amount of wind shares
         tag = "powerAbsWd"
         if tag in jsonData:
             Domoticz.Debug(tag+": " + str(jsonData[tag]))
-            powerAbs = jsonData[tag] * int(Parameters["Port"])
-            UpdateDevice(self.__UNIT_POWERWND, int(powerAbs), str(powerAbs), AlwaysUpdate=True)
+            powerAbs = max( 0, jsonData[tag] * self.__number_winddelen )
+            UpdateDevice(self.__UNIT_POWERWND, int( powerAbs ), str( powerAbs ), AlwaysUpdate=True)
         # Total power produced by the windmill
         tag = "powerAbsTot"
         if tag in jsonData:
             Domoticz.Debug(tag+": " + str(jsonData[tag]))
-            fval = round(float(jsonData[tag]), 1)
+            fval = round( max( 0, float( jsonData[tag] ) ), 1)
             UpdateDevice(self.__UNIT_POWERTOT, int(fval), str(fval), AlwaysUpdate=True)
         # Percentage of maximum power of the windmill
         tag = "powerRel"
@@ -200,7 +200,7 @@ class BasePlugin:
             Domoticz.Debug(tag+": " + str(jsonData[tag]))
             fval = round(float(jsonData[tag])/1000, 1)
             UpdateDevice(self.__UNIT_KWHTOT, int(fval), str(fval), AlwaysUpdate=True)
-            fval = round( float(jsonData[tag]) / self.__max_winddelen * int(Parameters["Port"]), 1 )
+            fval = round( float(jsonData[tag]) / self.__max_winddelen * self.__number_winddelen, 1 )
             UpdateDevice(self.__UNIT_KWHWND, int(fval), str(fval), AlwaysUpdate=True)
         tag = "hoursRunThisYear"
         if tag in jsonData:
