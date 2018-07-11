@@ -1,5 +1,4 @@
 # Windcentrale
-**Beta!!!**
 
 ## Why?
 The standard 'Winddelen' device only displays the current power of the windmill. This device gives you more detailed information about the production off the windmill, like current power, energy produced this year, windspeed, rotation speed, etc. 
