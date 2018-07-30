@@ -35,30 +35,32 @@
 import Domoticz
 import json
 
-class BasePlugin:
 
-    __HEARTBEATS2MIN = 6               # 5 minutes
+class BasePlugin:
+    __HEARTBEATS2MIN = 6  # 5 minutes
     __WINDMILLS = {
-        # Name                 ID  winddelen max
-        "De Grote Geert":   [   1,      9910,  0 ],
-        "De Jonge Held":    [   2,     10154,  0 ],
-        "Het Rode Hert":    [  31,      6648,  0 ],
-        "De Ranke Zwaan":   [  41,      6164,  0 ],
-        "De Witte Juffer":  [  51,      5721,  0 ],
-        "De Bonte Hen":     [ 111,      5579,  0 ],
-        "De Trouwe Wachter":[ 121,      5602,  0 ],
-        "De Blauwe Reiger": [ 131,      5534,  0 ],
-        "De Vier Winden":   [ 141,      5512,  0 ],
-        "De Boerenzwaluw":  [ 191,      3000,  0 ]
+        # Name: [ ID, winddelen ]
+        "De Grote Geert": [1, 9910],
+        "De Jonge Held": [2, 10154],
+        "Het Rode Hert": [31, 6648],
+        "De Ranke Zwaan": [41, 6164],
+        "De Witte Juffer": [51, 5721],
+        "De Bonte Hen": [111, 5579],
+        "De Trouwe Wachter": [121, 5602],
+        "De Blauwe Reiger": [131, 5534],
+        "De Vier Winden": [141, 5512],
+        "De Boerenzwaluw": [191, 3000],
+        # At the end of 2018, more windmills will be added
     }
 
+    # Url to get data from the windmills
     __API_ADDRESS = "zep-api.windcentrale.nl"
-    __API_URL = "/production/1/live"
+    __API_URL = "/production/{}/live"
 
     __UNIT_POWERWND = 1
     __UNIT_POWERTOT = 2
     __UNIT_WINDSPEED = 3
-    #__UNIT_WINDDIRECTION = 4
+    # __UNIT_WINDDIRECTION = 4
     __UNIT_POWERREL = 5
     __UNIT_RPM = 6
     __UNIT_OPERATIONAL = 7
@@ -86,10 +88,10 @@ class BasePlugin:
         if "xfr_windcentrale" not in Images:
             Domoticz.Image("xfr_windcentrale.zip").Create()
         image = Images["xfr_windcentrale"].ID
-        Domoticz.Debug("Image created. ID: "+str(image))
+        Domoticz.Debug("Image created. ID: " + str(image))
         # Validation of parameters
         # Check the selected Windmill
-        Domoticz.Debug("Adress: "+Parameters["Address"])
+        Domoticz.Debug("Adress: " + Parameters["Address"])
         try:
             windmill = self.__WINDMILLS[Parameters["Address"]]
             self.__id = windmill[0]
@@ -99,7 +101,7 @@ class BasePlugin:
             self.__id = -1
             self.__max_winddelen = -1
         # Check the number of winddelen
-        Domoticz.Debug("Mode1: "+Parameters["Mode1"])
+        Domoticz.Debug("Mode1: " + Parameters["Mode1"])
         try:
             self.__number_winddelen = int(Parameters["Mode1"])
             if self.__number_winddelen < 0 or self.__number_winddelen > self.__max_winddelen:
@@ -108,105 +110,94 @@ class BasePlugin:
             Domoticz.Debug("Invalid number of winddelen entered")
             self.__number_winddelen = -1
 
-        Domoticz.Debug("id: "+str(self.__id))
-        Domoticz.Debug("max winddelen: "+str(self.__max_winddelen))
-        Domoticz.Debug("number winddelen: "+str(self.__number_winddelen))
+        Domoticz.Debug("id: " + str(self.__id))
+        Domoticz.Debug("max winddelen: " + str(self.__max_winddelen))
+        Domoticz.Debug("number winddelen: " + str(self.__number_winddelen))
         # Create devices
         if len(Devices) == 0:
-            Domoticz.Device( Unit=self.__UNIT_POWERWND, Name="Power (" + str( self.__number_winddelen ) + ")", TypeName="Custom", Options={"Custom": "1;Watt"}, Image=image, Used=1).Create()
-            Domoticz.Device( Unit=self.__UNIT_POWERTOT, Name="Power (total)", TypeName="Custom", Options={"Custom": "1;kW"}, Image=image, Used=1).Create()
-            Domoticz.Device( Unit=self.__UNIT_POWERREL, Name="Relative", TypeName="Custom", Options={"Custom": "1;%"}, Image=image, Used=1).Create()
-            Domoticz.Device( Unit=self.__UNIT_WINDSPEED, Name="Wind speed", TypeName="Custom", Options={"Custom": "0.0;bft"}, Image=image, Used=1).Create()
-            #Domoticz.Device( Unit=self.__UNIT_WINDDIRECTION, Name="Wind direction", TypeName="Wind", Image=7, Used=1).Create()
-            Domoticz.Device( Unit=self.__UNIT_RPM, Name="RPM", TypeName="Custom", Options={"Custom": "1;rpm"}, Image=image, Used=1).Create()
-            Domoticz.Device( Unit=self.__UNIT_OPERATIONAL, Name="Operational time", TypeName="Custom", Options={"Custom": "1;%"}, Image=image, Used=1).Create()
-            Domoticz.Device( Unit=self.__UNIT_KWHWND, Name="Energy (" + str( self.__number_winddelen ) + ")", TypeName="Custom", Options={"Custom": "1;kWh"}, Image=image, Used=1).Create()
-            Domoticz.Device( Unit=self.__UNIT_KWHTOT, Name="Energy (total)", TypeName="Custom", Options={"Custom": "1;MWh"}, Image=image, Used=1).Create()
-            Domoticz.Device( Unit=self.__UNIT_HOURSYEAR, Name="Hours", TypeName="Custom", Image=image, Used=1).Create()
+            Domoticz.Device(Unit=self.__UNIT_POWERWND, Name="Power (" + str(self.__number_winddelen) + ")",
+                            TypeName="Custom", Options={"Custom": "1;Watt"}, Image=image, Used=1).Create()
+            Domoticz.Device(Unit=self.__UNIT_POWERTOT, Name="Power (total)", TypeName="Custom",
+                            Options={"Custom": "1;kW"}, Image=image, Used=1).Create()
+            Domoticz.Device(Unit=self.__UNIT_POWERREL, Name="Relative", TypeName="Custom", Options={"Custom": "1;%"},
+                            Image=image, Used=1).Create()
+            Domoticz.Device(Unit=self.__UNIT_WINDSPEED, Name="Wind speed", TypeName="Custom",
+                            Options={"Custom": "0.0;bft"}, Image=image, Used=1).Create()
+            # Domoticz.Device( Unit=self.__UNIT_WINDDIRECTION, Name="Wind direction", TypeName="Wind", Image=image, Used=1).Create()
+            Domoticz.Device(Unit=self.__UNIT_RPM, Name="RPM", TypeName="Custom", Options={"Custom": "1;rpm"},
+                            Image=image, Used=1).Create()
+            Domoticz.Device(Unit=self.__UNIT_OPERATIONAL, Name="Operational time", TypeName="Custom",
+                            Options={"Custom": "1;%"}, Image=image, Used=1).Create()
+            Domoticz.Device(Unit=self.__UNIT_KWHWND, Name="Energy (" + str(self.__number_winddelen) + ")",
+                            TypeName="Custom", Options={"Custom": "1;kWh"}, Image=image, Used=1).Create()
+            Domoticz.Device(Unit=self.__UNIT_KWHTOT, Name="Energy (total)", TypeName="Custom",
+                            Options={"Custom": "1;MWh"}, Image=image, Used=1).Create()
+            Domoticz.Device(Unit=self.__UNIT_HOURSYEAR, Name="Hours", TypeName="Custom", Image=image, Used=1).Create()
 
         DumpConfigToLog()
-        Domoticz.Debug("self.__API_ADDRESS: "+self.__API_ADDRESS)
-        self.__httpcon = Domoticz.Connection(Name="Windcentrale", Transport="TCP/IP", Protocol="HTTPS", Address=self.__API_ADDRESS, Port="443" )
+        Domoticz.Debug("self.__API_ADDRESS: " + self.__API_ADDRESS)
+        self.__httpcon = Domoticz.Connection(Name="Windcentrale", Transport="TCP/IP", Protocol="HTTPS",
+                                             Address=self.__API_ADDRESS, Port="443")
         self.__httpcon.Connect()
 
     def onStop(self):
         Domoticz.Debug("onStop called")
 
     def onConnect(self, Connection, Status, Description):
-        Domoticz.Debug("onConnect called ("+str(Status)+"): "+Description)
-        if (Status == 0):
+        Domoticz.Debug("onConnect called (" + str(Status) + "): " + Description)
+        if Status == 0:
             if self.__id > 0:
-                # url = self.__API_URL+self.__id
-                url = "/production/"+str(self.__id)+"/live"
-                Domoticz.Debug("url: "+url)
-                sendData = { 'Verb' : 'GET',
-                             'URL'  : url, \
-                             'Headers' : { 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', \
-                                           'Accept-Language' : 'en-GB,en;q=0.5', \
-                                           'Connection': 'keep-alive', \
-                                           'Host': self.__API_ADDRESS, \
-                                           'User-Agent':'Domoticz/1.0' }
-                           }
+                url = self.__API_URL.format(self.__id)
+                # url = "/production/"+str(self.__id)+"/live"
+                Domoticz.Debug("url: " + url)
+                sendData = {'Verb': 'GET',
+                            'URL': url,
+                            'Headers': {'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                                        'Accept-Language': 'en-GB,en;q=0.5',
+                                        'Connection': 'keep-alive',
+                                        'Host': self.__API_ADDRESS,
+                                        'User-Agent': 'Domoticz/1.0'}
+                            }
                 Connection.Send(sendData)
         else:
-            Domoticz.Error("Failed to connect ("+str(Status)+") to: "+self.__API_ADDRESS+" with error: "+Description)
+            Domoticz.Error(
+                "Failed to connect (" + str(Status) + ") to: " + self.__API_ADDRESS + " with error: " + Description)
 
     def onMessage(self, Connection, Data):
         Domoticz.Debug("onMessage called")
         DumpHTTPResponseToLog(Data)
         jsonData = json.loads(Data["Data"].decode("utf-8", "ignore"))
         # Power produced for the amount of wind shares
-        tag = "powerAbsWd"
-        if tag in jsonData:
-            Domoticz.Debug(tag+": " + str(jsonData[tag]))
-            powerAbs = max( 0, jsonData[tag] * self.__number_winddelen )
-            UpdateDevice(self.__UNIT_POWERWND, int( powerAbs ), str( powerAbs ), AlwaysUpdate=True)
+        ival = max(0, jsonData.get("powerAbsWd", 0) * self.__number_winddelen)
+        UpdateDevice(self.__UNIT_POWERWND, int(ival), str(ival), AlwaysUpdate=True)
         # Total power produced by the windmill
-        tag = "powerAbsTot"
-        if tag in jsonData:
-            Domoticz.Debug(tag+": " + str(jsonData[tag]))
-            fval = round( max( 0, float( jsonData[tag] ) ), 1)
-            UpdateDevice(self.__UNIT_POWERTOT, int(fval), str(fval), AlwaysUpdate=True)
+        fval = round(max(0, float(jsonData.get("powerAbsTot", 0))), 1)
+        UpdateDevice(self.__UNIT_POWERTOT, int(fval), str(fval), AlwaysUpdate=True)
         # Percentage of maximum power of the windmill
-        tag = "powerRel"
-        if tag in jsonData:
-            Domoticz.Debug(tag+": " + str(jsonData[tag]))
-            UpdateDevice(self.__UNIT_POWERREL, int(jsonData[tag]), str(jsonData[tag]), AlwaysUpdate=True)
-        #
-        tag = "windSpeed"
-        if tag in jsonData:
-            Domoticz.Debug(tag+": " + str(jsonData[tag]))
-            UpdateDevice(self.__UNIT_WINDSPEED, int(jsonData[tag]), str(jsonData[tag]), AlwaysUpdate=True)
+        ival = jsonData.get("powerRel", 0)
+        UpdateDevice(self.__UNIT_POWERREL, int(ival), str(ival), AlwaysUpdate=True)
+        # Windspeed in bft
+        ival = jsonData.get("windSpeed", 0)
+        UpdateDevice(self.__UNIT_WINDSPEED, int(ival), str(ival), AlwaysUpdate=True)
         #
         # tag = "windDirection"
         # if tag in jsonData:
         #     Domoticz.Debug(tag+": " + str(jsonData[tag]))
         #     UpdateDevice(self.__UNIT_WINDDIRECTION, 0, "0;"+str(jsonData[tag])+"0;0;0", AlwaysUpdate=True)
         # RPM. Rotation speed windmill
-        tag = "rpm"
-        if tag in jsonData:
-            Domoticz.Debug(tag+": " + str(jsonData[tag]))
-            fval = round(float(jsonData[tag]), 1)
-            UpdateDevice(self.__UNIT_RPM, int(fval), str(fval), AlwaysUpdate=True)
+        fval = round(float(jsonData.get("rpm", 0)), 1)
+        UpdateDevice(self.__UNIT_RPM, int(fval), str(fval), AlwaysUpdate=True)
         # Percentage time in production (since start of windmill)
-        tag = "runPercentage"
-        if tag in jsonData:
-            Domoticz.Debug(tag+": " + str(jsonData[tag]))
-            fval = round(float(jsonData[tag]), 1)
-            UpdateDevice(self.__UNIT_OPERATIONAL, int(fval), str(fval), AlwaysUpdate=True)
+        fval = round(float(jsonData.get("runPercentage", 0)), 1)
+        UpdateDevice(self.__UNIT_OPERATIONAL, int(fval), str(fval), AlwaysUpdate=True)
         # Total production this year and for the winddelen
-        tag = "kwh"
-        if tag in jsonData:
-            Domoticz.Debug(tag+": " + str(jsonData[tag]))
-            fval = round(float(jsonData[tag])/1000, 1)
-            UpdateDevice(self.__UNIT_KWHTOT, int(fval), str(fval), AlwaysUpdate=True)
-            fval = round( float(jsonData[tag]) / self.__max_winddelen * self.__number_winddelen, 1 )
-            UpdateDevice(self.__UNIT_KWHWND, int(fval), str(fval), AlwaysUpdate=True)
-        tag = "hoursRunThisYear"
-        if tag in jsonData:
-            Domoticz.Debug(tag+": " + str(jsonData[tag]))
-            fval = round(float(jsonData[tag]), 1)
-            UpdateDevice(self.__UNIT_HOURSYEAR, int(fval), str(fval), AlwaysUpdate=True)
+        fval = round(float(jsonData.get("kwh", 0)) / 1000, 1)
+        UpdateDevice(self.__UNIT_KWHTOT, int(fval), str(fval), AlwaysUpdate=True)
+        fval = round(float(jsonData.get("kwh", 0)) / self.__max_winddelen * self.__number_winddelen, 1)
+        UpdateDevice(self.__UNIT_KWHWND, int(fval), str(fval), AlwaysUpdate=True)
+        # Hours in production
+        fval = round(float(jsonData.get("hoursRunThisYear")), 1)
+        UpdateDevice(self.__UNIT_HOURSYEAR, int(fval), str(fval), AlwaysUpdate=True)
 
     def onCommand(self, Unit, Command, Level, Hue):
         Domoticz.Debug(
@@ -229,42 +220,52 @@ class BasePlugin:
                 self.__httpcon.Connect()
             self.__runAgain = 1 * self.__HEARTBEATS2MIN  # 1 minute
         else:
-            Domoticz.Debug("onHeartbeat called, run again in "+str(self.__runAgain)+" heartbeats.")
+            Domoticz.Debug("onHeartbeat called, run again in " + str(self.__runAgain) + " heartbeats.")
+
 
 global _plugin
 _plugin = BasePlugin()
+
 
 def onStart():
     global _plugin
     _plugin.onStart()
 
+
 def onStop():
     global _plugin
     _plugin.onStop()
+
 
 def onConnect(Connection, Status, Description):
     global _plugin
     _plugin.onConnect(Connection, Status, Description)
 
+
 def onMessage(Connection, Data):
     global _plugin
     _plugin.onMessage(Connection, Data)
+
 
 def onCommand(Unit, Command, Level, Hue):
     global _plugin
     _plugin.onCommand(Unit, Command, Level, Hue)
 
+
 def onNotification(Name, Subject, Text, Status, Priority, Sound, ImageFile):
     global _plugin
     _plugin.onNotification(Name, Subject, Text, Status, Priority, Sound, ImageFile)
+
 
 def onDisconnect(Connection):
     global _plugin
     _plugin.onDisconnect(Connection)
 
+
 def onHeartbeat():
     global _plugin
     _plugin.onHeartbeat()
+
 
 ################################################################################
 # Generic helper functions
@@ -284,19 +285,23 @@ def DumpConfigToLog():
     for x in Settings:
         Domoticz.Debug("Setting:           " + str(x) + " - " + str(Settings[x]))
 
+
 def UpdateDevice(Unit, nValue, sValue, TimedOut=0, AlwaysUpdate=False):
     # Make sure that the Domoticz device still exists (they can be deleted) before updating it
     if Unit in Devices:
-        if Devices[Unit].nValue != nValue or Devices[Unit].sValue != sValue or Devices[Unit].TimedOut != TimedOut or AlwaysUpdate:
+        if Devices[Unit].nValue != nValue or Devices[Unit].sValue != sValue or Devices[
+            Unit].TimedOut != TimedOut or AlwaysUpdate:
             Devices[Unit].Update(nValue=nValue, sValue=str(sValue), TimedOut=TimedOut)
-            Domoticz.Debug("Update " + Devices[Unit].Name + ": " + str(nValue) + " - '" + str(sValue) + "' - " + str(TimedOut))
+            Domoticz.Debug(
+                "Update " + Devices[Unit].Name + ": " + str(nValue) + " - '" + str(sValue) + "' - " + str(TimedOut))
+
 
 def DumpHTTPResponseToLog(httpDict):
     if isinstance(httpDict, dict):
-        Domoticz.Debug("HTTP Details ("+str(len(httpDict))+"):")
+        Domoticz.Debug("HTTP Details (" + str(len(httpDict)) + "):")
         for x in httpDict:
             if isinstance(httpDict[x], dict):
-                Domoticz.Debug("--->'"+x+" ("+str(len(httpDict[x]))+"):")
+                Domoticz.Debug("--->'" + x + " (" + str(len(httpDict[x])) + "):")
                 for y in httpDict[x]:
                     Domoticz.Debug("------->'" + y + "':'" + str(httpDict[x][y]) + "'")
             else:
