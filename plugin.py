@@ -49,7 +49,7 @@ class BasePlugin:
         "De Trouwe Wachter": [121, 5602],
         "De Blauwe Reiger": [131, 5534],
         "De Vier Winden": [141, 5512],
-        "De Boerenzwaluw": [191, 3000],
+        "De Boerenzwaluw": [201, 3000],
         # At the end of 2018, more windmills will be added
     }
 
