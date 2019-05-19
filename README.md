@@ -29,6 +29,5 @@ The following 9 units are created:
 | **News**              | Displays the last 2 news items for the windmill                                |
 
 ## To do
-- ~~[ ] Add polling time (now every minute)~~
 - [ ] Add 'Wind direction'. Didn't found a way to display this. The standard 'Wind' device, also display the wind speed in m/s. But we get only the wind speed in bft from windcentrale :(
 - [ ] Add possibility to see the results from multiple windmills?
