@@ -6,7 +6,7 @@
 #   https://zep-api.windcentrale.nl/production/<id>/live
 #
 """
-<plugin key="xfr_windcentrale" name="Windcentrale" author="Xorfor" version="2.0.0" wikilink="https://github.com/Xorfor/Domoticz-Windcentrale-Plugin" externallink="https://www.windcentrale.nl/">
+<plugin key="xfr_windcentrale" name="Windcentrale" author="Xorfor" version="2.0.1" wikilink="https://github.com/Xorfor/Domoticz-Windcentrale-Plugin" externallink="https://www.windcentrale.nl/">
     <params>
         <param field="Address" label="Select a mill" width="200px" required="true">
             <options>
@@ -373,7 +373,7 @@ def UpdateDevice(Unit, nValue, sValue, TimedOut=0, AlwaysUpdate=False):
             Unit].TimedOut != TimedOut or AlwaysUpdate:
             Devices[Unit].Update(nValue=nValue, sValue=str(sValue), TimedOut=TimedOut)
             Domoticz.Debug(
-                "Update " + Devices[Unit].Name + ": " + str(nValue) + " - "" + str(sValue) + "" - " + str(TimedOut))
+                "Update " + Devices[Unit].Name + ": " + str(nValue) + " - '" + str(sValue) + "' - " + str(TimedOut))
 
 
 def DumpHTTPResponseToLog(httpDict):
@@ -383,6 +383,7 @@ def DumpHTTPResponseToLog(httpDict):
             if isinstance(httpDict[x], dict):
                 Domoticz.Debug("--->'" + x + " (" + str(len(httpDict[x])) + "):")
                 for y in httpDict[x]:
-                    Domoticz.Debug("------->"" + y + "":"" + str(httpDict[x][y]) + """)
+                    Domoticz.Debug("------->'" + y + "': '" +
+                                   str(httpDict[x][y]) + "'")
             else:
                 Domoticz.Debug("--->'" + x + "':'" + str(httpDict[x]) + "'")
