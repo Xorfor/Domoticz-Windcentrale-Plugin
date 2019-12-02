@@ -38,23 +38,23 @@ import Domoticz
 import json
 import xml.etree.ElementTree as ET
 from datetime import datetime
-from enum import IntEnum, auto, unique
+from enum import IntEnum, unique #, auto
 
 
 @unique
 class Unit(IntEnum):
     # Devices
-    POWERWND = auto()
-    POWERTOT = auto()
-    WINDSPEED = auto()
-    DKWHWND = auto()  # version >= 3.0
-    POWERREL = auto()
-    RPM = auto()
-    OPERATIONAL = auto()
-    KWHTOT = auto()
-    KWHWND = auto()
-    HOURSYEAR = auto()
-    NEWS = auto()  # version >= 2.0
+    POWERWND = 1 #auto()
+    POWERTOT = 2 #auto()
+    WINDSPEED = 3 #auto()
+    DKWHWND = 4 #auto()  # version >= 3.0
+    POWERREL = 5 #auto()
+    RPM = 6 #auto()
+    OPERATIONAL = 7 #auto()
+    KWHTOT = 8 #auto()
+    KWHWND = 9 #auto()
+    HOURSYEAR = 10 #auto()
+    NEWS = 11 #auto()  # version >= 2.0
 
 
 @unique
@@ -67,7 +67,7 @@ class Switchtype(IntEnum):
 @unique
 class Used(IntEnum):
     NOTUSED = 0
-    USED = auto()
+    USED = 1 #auto()
 
 
 class BasePlugin:
