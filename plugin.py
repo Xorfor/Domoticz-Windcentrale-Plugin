@@ -443,9 +443,9 @@ class BasePlugin:
         if Connection.Name == self.CONN_PROD:
             data = ET.fromstring(Data["Data"])
             sum = float(data.find("./productie/subset[@period='DAY']").get("sum"))
-            Domoticz.Log("sum: {}".format(int(sum)))
+            Domoticz.Debug("sum: {}".format(int(sum)))
             self.__wnd_kwh = (self.__number_winddelen * sum) / self.__max_winddelen
-            Domoticz.Log("self.__wnd_kwh: {}".format(1000 * self.__wnd_kwh))
+            Domoticz.Debug("self.__wnd_kwh: {}".format(1000 * self.__wnd_kwh))
             UpdateDevice(
                 Unit.DKWHWND,
                 0,
