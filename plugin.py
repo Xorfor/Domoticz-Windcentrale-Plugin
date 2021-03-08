@@ -87,7 +87,7 @@ class BasePlugin:
         "De Trouwe Wachter": ["121", "21", 5602],
         "De Blauwe Reiger": ["131", "21", 5534],
         "De Vier Winden": ["141", "21", 5512],
-        "De Boerenzwaluw": ["191", "31", 3000],
+        "De Boerenzwaluw": ["201", "31", 3000],
         # "Het Vliegend Hert": ["211", "", 9751],
     }
 
