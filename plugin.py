@@ -8,7 +8,7 @@
 #   https://zep-api.windcentrale.nl/app/config
 #
 """
-<plugin key="xfr_windcentrale" name="Windcentrale" author="Xorfor" version="3.1" wikilink="https://github.com/Xorfor/Domoticz-Windcentrale-Plugin" externallink="https://www.windcentrale.nl/">
+<plugin key="xfr_windcentrale" name="Windcentrale" author="Xorfor" version="3.2" wikilink="https://github.com/Xorfor/Domoticz-Windcentrale-Plugin" externallink="https://www.windcentrale.nl/">
     <params>
         <param field="Address" label="Select a mill" width="200px" required="true">
             <options>
@@ -21,6 +21,7 @@
                 <option label="Het Rode Hert" value="Het Rode Hert"/>
                 <option label="De Trouwe Wachter" value="De Trouwe Wachter"/>
                 <option label="De Vier Winden" value="De Vier Winden"/>
+                <option label="Het Vliegend Hert" value="Het Vliegend Hert"/>                
                 <option label="De Witte Juffer" value="De Witte Juffer"/>
             </options>
         </param>
@@ -77,18 +78,18 @@ class BasePlugin:
     __HEARTBEATS2MIN_CONFIG = __HEARTBEATS2MIN * 60  # 1 hour
 
     __WINDMILLS = {
-        # Name: [ id, parkid, winddelen ]
-        "De Grote Geert": ["1", "1", 9910],
-        "De Jonge Held": ["2", "1", 10154],
-        "Het Rode Hert": ["31", "11", 6648],
-        "De Ranke Zwaan": ["41", "11", 6164],
-        "De Witte Juffer": ["51", "11", 5721],
-        "De Bonte Hen": ["111", "21", 5579],
-        "De Trouwe Wachter": ["121", "21", 5602],
-        "De Blauwe Reiger": ["131", "21", 5534],
-        "De Vier Winden": ["141", "21", 5512],
-        "De Boerenzwaluw": ["201", "31", 3000],
-        # "Het Vliegend Hert": ["211", "", 9751],
+        # Name: [ data id, parkid, winddelen, message id ]
+        "De Grote Geert": ["1", "1", 9910, "1"],
+        "De Jonge Held": ["2", "1", 10154, "2"],
+        "Het Rode Hert": ["31", "11", 6648, "31"],
+        "De Ranke Zwaan": ["41", "11", 6164, "41"],
+        "De Witte Juffer": ["51", "11", 5721, "51"],
+        "De Bonte Hen": ["111", "21", 5579, "111"],
+        "De Trouwe Wachter": ["121", "21", 5602, "121"],
+        "De Blauwe Reiger": ["131", "21", 5534, "131"],
+        "De Vier Winden": ["141", "21", 5512, "141"],
+        "De Boerenzwaluw": ["201", "31", 3000, "191"],
+        "Het Vliegend Hert": ["211", "51", 3000, "211"],
     }
 
     # Url to get data from the windmills
@@ -199,7 +200,7 @@ class BasePlugin:
     def __init__(self):
         self.__runAgainLive = 0
         self.__runAgainConfig = 0
-        self.__id = None
+        self.__data_id = None
         self.__parkid = None
         self.__max_winddelen = None
         self.__number_winddelen = None
@@ -224,14 +225,16 @@ class BasePlugin:
         Domoticz.Debug("Adress: {}".format(Parameters["Address"]))
         try:
             windmill = self.__WINDMILLS[Parameters["Address"]]
-            self.__id = windmill[0]
+            self.__data_id = windmill[0]
             self.__parkid = windmill[1]
             self.__max_winddelen = windmill[2]
+            self.__message_id = windmill[3]
         except:
             Domoticz.Error("Invalid windmill selected")  # Should not be possible!
-            self.__id = None
+            self.__data_id = None
             self.__parkid = None
             self.__max_winddelen = None
+            self.__message_id = None
         # Check the number of winddelen
         Domoticz.Debug("Mode1: {}".format(Parameters["Mode1"]))
         try:
@@ -245,7 +248,7 @@ class BasePlugin:
             Domoticz.Error("Invalid number of winddelen entered")
             self.__number_winddelen = None
 
-        Domoticz.Debug("id: {}".format(self.__id))
+        Domoticz.Debug("id: {}".format(self.__data_id))
         Domoticz.Debug("parkid: {}".format(self.__parkid))
         Domoticz.Debug("max winddelen: {}".format(self.__max_winddelen))
         Domoticz.Debug("number winddelen: {}".format(self.__number_winddelen))
@@ -304,8 +307,8 @@ class BasePlugin:
         # Live
         if Connection.Name == self.CONN_LIVE:
             if Status == 0:
-                if self.__id is not None:
-                    url = self.API_LIVE.format(self.__id)
+                if self.__data_id is not None:
+                    url = self.API_LIVE.format(self.__data_id)
                     Domoticz.Debug("url: {}".format(url))
                     sendData = {
                         "Verb": "GET",
@@ -326,7 +329,7 @@ class BasePlugin:
         # Config
         if Connection.Name == self.CONN_CONFIG:
             if Status == 0:
-                if self.__id is not None:
+                if self.__data_id is not None:
                     url = self.API_CONFIG
                     Domoticz.Debug("url: {}".format(url))
                     sendData = {
@@ -424,7 +427,7 @@ class BasePlugin:
             for child in news:
                 if (
                     (child.attrib["p"] == self.__parkid and child.attrib["m"] == "0")
-                    or (child.attrib["p"] == "0" and child.attrib["m"] == self.__id)
+                    or (child.attrib["p"] == "0" and child.attrib["m"] == self.__message_id)
                     or (child.attrib["p"] == "0" and child.attrib["m"] == "0")
                 ):
                     Domoticz.Debug("child.findtext: {}".format(child.findtext("t")))
